@@ -52,3 +52,36 @@ class Employee(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.employee_id} - {self.position}"
+
+
+class Account(models.Model):
+    ACCOUNT_TYPES = [
+        ('savings', 'Saving'),
+        ('current', 'Current'),
+        ('fixed_deposit', 'Fixed_Deposit'),
+    ]
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
+    account_type = models.CharField(max_length=20, choices=ACCOUNT_TYPES)
+    balance = models.DecimalField(max_digits=10, decimal_places=2)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    is_deleted = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.account_type} - {self.customer.account_number}"
+class Transaction(models.Model):
+    TRANSACTION_TYPES = [
+        ('deposit', 'Deposit'),
+        ('withdrawal', 'Withdrawal'),
+        ('transfer', 'Transfer'),
+    ]
+
+    account = models.ForeignKey(Account, on_delete=models.CASCADE)
+    transaction_type = models.CharField(max_length=20, choices=TRANSACTION_TYPES)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    transaction_date = models.DateTimeField(auto_now_add=True)
+    description = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.transaction_type} - {self.amount} - {self.account.customer.account_number}"

@@ -19,3 +19,14 @@ staticfiles/
 
 # GCP credentials
 *.json
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual environments
+venv/
+.venv/
+
+# Firebase credentials
+aaliya_agate/firebase/*.json

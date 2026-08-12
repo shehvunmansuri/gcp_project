@@ -5,7 +5,7 @@ class Customer(models.Model):
     name = models.CharField(max_length=100)
     account_number = models.CharField(max_length=20, unique=True)
     account_type = models.CharField(max_length=100)
-    balance = models.DecimalField(max_digits=10, decimal_places=2)  
+    balance = models.DecimalField(max_digits=15, decimal_places=2)  
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_deleted = models.BooleanField(default=False)
@@ -28,6 +28,7 @@ class Branch(models.Model):
     
 class Loan(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    # branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
     loan_type = models.CharField(max_length=100)
     amount = models.DecimalField(max_digits=15, decimal_places=2)
     interest_rate = models.DecimalField(max_digits=5, decimal_places=2)

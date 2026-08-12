@@ -1,7 +1,8 @@
 from django.shortcuts import render
-# from rest_framework.views import APIView
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from .serializers import *
-from django.http import JsonResponse
+from django.http import JsonResponse, request
 from .models import *
 from django.http import JsonResponse
 from django.views import View
@@ -9,7 +10,7 @@ from django.db import transaction
 import json
 
 # Create your views here.
-
+@method_decorator(csrf_exempt, name='dispatch')
 def get_customers(request):
     print(request, 'request')
     print(request.method, 'request.method')
@@ -50,3 +51,25 @@ def get_customers(request):
 
     }
     return JsonResponse(data, status=200)
+
+class CustomerPOSTAPI(View):
+    sserialzier_class = CustomerPostSerializer
+
+    @transaction.atomic
+    def post(self, request, Format=None):
+        response = {}
+        print(request.body, 'request.body printed')
+
+        data = json.loads(request.body)
+        print(data, 'data printed')
+        serializer = self.sserialzier_class(data=data)
+        print(serializer, 'serializer printed')
+
+        if serializer.is_valid():
+            try:
+                create_customer = serializer.save()
+                print(create_customer, 'create_customer printed')
+                return JsonResponse({"message": "Customer created successfully"}, status=200)
+            except Exception as e:
+                print(e, 'error while creating customer')
+        return JsonResponse({"message": "Invalid data", "errors": serializer.errors}, status=400)

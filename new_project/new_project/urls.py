@@ -22,4 +22,5 @@ from bank.views import *
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("customers/", include("bank.urls")),
+    path("api/",include("bank.urls")),
 ]
